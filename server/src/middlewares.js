@@ -2,7 +2,7 @@
 // IF the app ends here that means we didnt get he route we were looking for
 const notFound = (req, res, next) => {
   // Create the error
-  const error = new Error(`Not Found - $(req.originalUrl)`);
+  const error = new Error(`Not Found - ${req.originalUrl}`);
   //Set the status to 404
   // Forward the error to next middleware
   next(error);
