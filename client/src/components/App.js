@@ -9,7 +9,7 @@ const App = () => {
   const [addEntryLocation, setAddEntryLocation] = useState(null);
   const [viewport, setViewport] = useState({
     width: '100vh',
-    height: '100vw',
+    height: '80vw',
     latitude: 37.6,
     longitude: -95.665,
     zoom: 3
@@ -31,16 +31,19 @@ const App = () => {
     // when the component loads, we call getEntries()
     getEntries()
   }, [])
+  
+  // console.log(showPopup);
 
   const showAddMarkerPopup = (e) => {
-    console.log(e);
+    // console.log(e);
     const [longitude, latitude] = e.lngLat;
     setAddEntryLocation({
       latitude,
       longitude
     }) 
   }
-
+  // console.log(addEntryLocation)
+  
   return (
     <ReactMapGL
       {...viewport}
@@ -60,7 +63,7 @@ const App = () => {
           {/* <div>{entry.title}</div> */}
           <div
             onClick={() => setShowPopup({
-            // ...showPopup,
+            ...showPopup,
             [entry._id]: true
           })}
           >
@@ -75,11 +78,10 @@ const App = () => {
             dynamicPosition={true}
             closeButton={true}
             closeOnClick={false}
-            // onClose={() => setShowPopup({
-            //   ...showPopup,
-            //   [entry._id]: false
-            // })}
-            onClose={() => setAddEntryLocation(null)}
+            onClose={() => setShowPopup({
+              ...showPopup,
+              [entry._id]: false
+            })}
             anchor="top" >
             <div className='popup'>
               <h3>{entry.title}</h3>
@@ -103,7 +105,7 @@ const App = () => {
           >
             {/* <div>{entry.title}</div> */}
             <div>
-              <svg viewBox="0 0 24 24" width="24" height="24" stroke="red" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="red" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="css-i6dzq1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             </div>
           </Marker>
           <Popup

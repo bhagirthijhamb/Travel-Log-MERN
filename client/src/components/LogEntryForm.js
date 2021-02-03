@@ -9,11 +9,12 @@ const LogEntryForm = ({ location, onClose }) => {
 
   const onSubmit = async (data) => {
     try {
-      // console.log(data)
+      console.log(data)
       setLoading(true);
       data.latitude = location.latitude;
       data.longitude = location.longitude;
       const created = await createLogEntry(data);
+      setLoading(false);
       console.log(created);
       onClose();
     } catch(error){
