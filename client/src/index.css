@@ -4,3 +4,7 @@ body {
   overflow: hidden;
   /* border: 5px solid red; */
 }
+
+.popup {
+  max-width: 300px;
+}

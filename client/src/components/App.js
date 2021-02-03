@@ -4,7 +4,8 @@ import { listLogEntries } from './../API';
 
 const App = () => {
   const [logEntries, setLogEntries] = useState([]);
-  const [showPopup, setShowPopup] = useState({})
+  const [showPopup, setShowPopup] = useState({});
+  const [addEntryLocation, setAddEntryLocation] = useState(null);
   const [viewport, setViewport] = useState({
     width: '100vh',
     height: '100vw',
@@ -17,10 +18,19 @@ const App = () => {
     // async IIFE
     (async() => {
       const logEntries = await listLogEntries();
-      console.log(logEntries);
+      // console.log(logEntries);
       setLogEntries(logEntries);
     })();
   }, [])
+
+  const showAddMarkerPopup = (e) => {
+    console.log(e);
+    const [longitude, latitude] = e.lngLat;
+    setAddEntryLocation({
+      latitude,
+      longitude
+    }) 
+  }
 
   return (
     <ReactMapGL
@@ -28,6 +38,7 @@ const App = () => {
       mapStyle="mapbox://styles/bhagirthi/ckkok7vzi19sj17pim3eyh62m"
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
       onViewportChange={nextViewport => setViewport(nextViewport)}
+      onDblClick={showAddMarkerPopup}
     >
       {logEntries.map(entry => (
         <>
@@ -41,7 +52,7 @@ const App = () => {
           {/* <div>{entry.title}</div> */}
           <div
             onClick={() => setShowPopup({
-            ...showPopup,
+            // ...showPopup,
             [entry._id]: true
           })}
           >
@@ -53,16 +64,19 @@ const App = () => {
           <Popup
             latitude={entry.latitude} 
             longitude={entry.longitude}
+            dynamicPosition={true}
             closeButton={true}
             closeOnClick={false}
-            onClose={() => setShowPopup({
-              ...showPopup,
-              [entry._id]: false
-            })}
+            // onClose={() => setShowPopup({
+            //   ...showPopup,
+            //   [entry._id]: false
+            // })}
+            onClose={() => setAddEntryLocation(null)}
             anchor="top" >
-            <div>
+            <div className='popup'>
               <h3>{entry.title}</h3>
               <p>{entry.comments}</p>
+              <small>Visited on: {new Date(entry.visitDate).toLocaleDateString()}</small>
             </div>
           </Popup>
           ) : null
@@ -70,6 +84,37 @@ const App = () => {
         </>
       ))}
     
+      {addEntryLocation ? (
+        <>
+          <Marker 
+            latitude={addEntryLocation.latitude} 
+            longitude={addEntryLocation.longitude} 
+            offsetLeft={-12} 
+            offsetTop={-24}
+          >
+            {/* <div>{entry.title}</div> */}
+            <div>
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="red" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+          </Marker>
+          <Popup
+            latitude={addEntryLocation.latitude} 
+            longitude={addEntryLocation.longitude}
+            dynamicPosition={true}
+            closeButton={true}
+            closeOnClick={false}
+            // onClose={() => setShowPopup({
+            //   ...showPopup,
+            //   [entry._id]: false
+            // })}
+            onClose={() => setShowPopup({})}
+            anchor="top" >
+            <div className='popup'>
+              <h3>Add your new log entry</h3>
+            </div>
+          </Popup>
+        </>
+      )  : null}
     </ReactMapGL>
   );
 }
