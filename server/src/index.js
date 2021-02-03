@@ -35,7 +35,7 @@ app.use('/api/logs', logs);
 // Not found Middleware
 app.use(middlewares.notFound);
 // Errror handling middleware
-app.use(middlewares.errorHanlder);
+app.use(middlewares.errorHandler);
 
 const port = process.env.PORT || 1337;  
 app.listen(port, () => {

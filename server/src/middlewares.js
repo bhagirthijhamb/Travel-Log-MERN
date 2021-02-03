@@ -8,8 +8,10 @@ const notFound = (req, res, next) => {
   next(error);
 }
 
-const errorHanlder = (error, req, res, next) => {
-  const statusCode = req.statusCode === 200 ? 500 : res.statusCode;
+const errorHandler = (error, req, res, next) => {
+  console.log('statusCode', res.statusCode);
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  console.log('statusCode', statusCode);
   res.status(statusCode);
   res.json({
     message: error.message,
@@ -17,4 +19,4 @@ const errorHanlder = (error, req, res, next) => {
   })
 }
 
-module.exports = { notFound, errorHanlder };
+module.exports = { notFound, errorHandler };
